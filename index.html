@@ -1,317 +1,300 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💙 بقيان لتنورنا خالتي 💙</title>
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
-
-body{
-    height:100vh;
-    overflow:hidden;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(180deg,#dff7ff,#8fd3ff,#ffffff);
-}
-
-/* 🌤️ صندوق الشمس/القمر */
-.skyBox{
-    position:absolute;
-    top:10px;
-    left:10px;
-    display:flex;
-    align-items:center;
-    gap:6px;
-    background:rgba(135,206,235,0.55);
-    backdrop-filter:blur(8px);
-    padding:6px 10px;
-    border-radius:12px;
-    box-shadow:0 3px 10px rgba(0,0,0,0.2);
-    z-index:50;
-    font-size:12px;
-    font-weight:bold;
-    color:#003a66;
-}
-
-.sun,.moon{
-    width:26px;
-    height:26px;
-    border-radius:50%;
-}
-
-/* ☀️ شمس واقعية */
-.sun{
-    background:radial-gradient(circle at 30% 30%, #fff7a0, #ffb300, #ff8800);
-    box-shadow:0 0 18px #ffcc00;
-}
-
-/* 🌙 قمر واقعي */
-.moon{
-    background:radial-gradient(circle at 30% 30%, #ffffff, #d0d7e2, #8a94a6);
-    box-shadow:0 0 10px rgba(255,255,255,0.8);
-    position:relative;
-    display:none;
-}
-
-.moon::after{
-    content:"";
-    position:absolute;
-    width:6px;
-    height:6px;
-    background:rgba(0,0,0,0.15);
-    border-radius:50%;
-    top:6px;
-    left:10px;
-    box-shadow:8px 4px 0 rgba(0,0,0,0.12),
-               -5px 10px 0 rgba(0,0,0,0.10);
-}
-
-/* ☁️ الغيوم */
-.cloud{
-    position:absolute;
-    top:10%;
-    width:120px;
-    height:60px;
-    background:#fff;
-    border-radius:50px;
-    opacity:0.7;
-    filter:blur(1px);
-    animation:moveClouds linear infinite;
-    z-index:0;
-}
-
-.cloud::before,
-.cloud::after{
-    content:"";
-    position:absolute;
-    background:#fff;
-    border-radius:50%;
-}
-
-.cloud::before{width:60px;height:60px;top:-20px;left:10px;}
-.cloud::after{width:70px;height:70px;top:-25px;right:10px;}
-
-@keyframes moveClouds{
-    from{transform:translateX(-200px);}
-    to{transform:translateX(110vw);}
-}
-
-/* ⭐ نجوم بطيئة */
-.star{
-    position:absolute;
-    top:-50px;
-    font-size:18px;
-    animation:fall 12s linear forwards;
-    z-index:1;
-    opacity:0.9;
-}
-
-@keyframes fall{
-    0%{transform:translateY(0);opacity:1;}
-    100%{transform:translateY(110vh);opacity:0;}
-}
-
-/* 💙 قلوب بطيئة */
-.heart{
-    position:absolute;
-    font-size:18px;
-    animation:floatUp 12s linear forwards;
-    z-index:1;
-    opacity:0.9;
-    filter:drop-shadow(0 0 8px #4fc3ff);
-}
-
-@keyframes floatUp{
-    0%{transform:translateY(0);opacity:1;}
-    100%{transform:translateY(-120vh);opacity:0;}
-}
-
-/* 🎆 ألعاب نارية */
-.firework{
-    position:absolute;
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    animation:boom 1.2s ease-out forwards;
-    z-index:999;
-}
-
-@keyframes boom{
-    0%{transform:scale(1);opacity:1;}
-    100%{transform:scale(30);opacity:0;}
-}
-
-/* البطاقة */
-.card{
-    z-index:10;
-    background:rgba(255,255,255,.35);
-    backdrop-filter:blur(18px);
-    padding:40px;
-    border-radius:30px;
-    text-align:center;
-    box-shadow:0 15px 40px rgba(0,0,0,.15);
-    border:2px solid rgba(255,255,255,.5);
-    width:90%;
-    max-width:420px;
-}
-
-h1{
-    color:#0099ff;
-    font-size:32px;
-    margin-bottom:10px;
-}
-
-.subtitle{
-    color:#0066cc;
-    margin-bottom:20px;
-    font-weight:bold;
-}
-
-#timer{
-    font-size:26px;
-    font-weight:bold;
-    color:#0066cc;
-}
-
-.box{
-    background:rgba(255,255,255,.5);
-    margin:8px 0;
-    padding:10px;
-    border-radius:15px;
-}
-
-.end{
-    font-size:26px;
-    color:#00aaff;
-    font-weight:bold;
-}
-</style>
-</head>
-
-<body>
-
-<div class="skyBox">
-    <div id="sun" class="sun"></div>
-    <div id="moon" class="moon"></div>
-    <div id="skyText">حاليًا صباحًا ☀️</div>
-</div>
-
-<!-- غيوم -->
-<div class="cloud" style="top:10%; animation-duration:35s;"></div>
-<div class="cloud" style="top:25%; animation-duration:45s;"></div>
-<div class="cloud" style="top:40%; animation-duration:40s;"></div>
-
-<div class="card">
-    <h1>💙 بقيان لتنورنا خالتي 💙</h1>
-    <div class="subtitle">✨ قربت ✨</div>
-    <div id="timer"></div>
-</div>
-
-<script>
-
-const targetDate = new Date("2026-07-02T07:00:00");
-
-let fireInterval;
-
-/* 🌞🌙 */
-function updateSky(){
-    const hour = new Date().getHours();
-    const sun = document.getElementById("sun");
-    const moon = document.getElementById("moon");
-    const text = document.getElementById("skyText");
-
-    if(hour >= 6 && hour < 18){
-        sun.style.display="block";
-        moon.style.display="none";
-        text.innerHTML="حاليًا صباحًا ☀️";
-    } else {
-        sun.style.display="none";
-        moon.style.display="block";
-        text.innerHTML="حاليًا مساءً 🌙";
-    }
-}
-
-updateSky();
-setInterval(updateSky,60000);
-
-/* ⏳ العداد */
-function updateTimer(){
-
-    const now=new Date();
-    const diff=targetDate-now;
-
-    if(diff<=0){
-        document.getElementById("timer").innerHTML=
-        `<div class="end">🎉 الحمد لله على السلامة 💙</div>`;
-        startFireworks();
-        return;
-    }
-
-    const d=Math.floor(diff/(1000*60*60*24));
-    const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-    const m=Math.floor((diff%(1000*60*60))/(1000*60));
-    const s=Math.floor((diff%(1000*60))/1000);
-
-    document.getElementById("timer").innerHTML=`
-        <div class="box">📅 ${d} يوم</div>
-        <div class="box">⏰ ${h} ساعة</div>
-        <div class="box">🕒 ${m} دقيقة</div>
-        <div class="box">⏳ ${s} ثانية</div>
-    `;
-}
-
-updateTimer();
-setInterval(updateTimer,1000);
-
-/* ⭐ نجوم */
-function createStar(){
-    const star=document.createElement("div");
-    star.className="star";
-    star.innerHTML=["⭐","✨"][Math.floor(Math.random()*2)];
-    star.style.left=Math.random()*100+"vw";
-    document.body.appendChild(star);
-    setTimeout(()=>star.remove(),12000);
-}
-setInterval(createStar,250);
-
-/* 💙 قلوب */
-function createHeart(){
-    const heart=document.createElement("div");
-    heart.className="heart";
-    heart.innerHTML="💙";
-    heart.style.left=Math.random()*100+"vw";
-    document.body.appendChild(heart);
-    setTimeout(()=>heart.remove(),12000);
-}
-setInterval(createHeart,300);
-
-/* 🎆 ألعاب نارية دائمة */
-function createFirework(){
-    const fw=document.createElement("div");
-    fw.className="firework";
-    fw.style.left=Math.random()*100+"vw";
-    fw.style.top=Math.random()*80+"vh";
-    fw.style.background=["#ff3b3b","#00c3ff","#7cff3a","#ffd000","#ff4dff"]
-    [Math.floor(Math.random()*5)];
-    document.body.appendChild(fw);
-    setTimeout(()=>fw.remove(),1200);
-}
-
-function startFireworks(){
-    if(!fireInterval){
-        fireInterval=setInterval(createFirework,120);
-    }
-}
-
-</script>
-
-</body>
+<!DOCTYPE html>  <html lang="ar" dir="rtl">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>💙 بقيان لتنورنا خالتي 💙</title>  <style>  
+*{  
+    margin:0;  
+    padding:0;  
+    box-sizing:border-box;  
+    font-family:Arial,sans-serif;  
+}  
+  
+body{  
+    height:100vh;  
+    overflow:hidden;  
+    display:flex;  
+    justify-content:center;  
+    align-items:center;  
+    background:linear-gradient(180deg,#dff7ff,#8fd3ff,#ffffff);  
+}  
+  
+/* 🌤️ صندوق الشمس/القمر */  
+.skyBox{  
+    position:absolute;  
+    top:10px;  
+    left:10px;  
+    display:flex;  
+    align-items:center;  
+    gap:6px;  
+    background:rgba(135,206,235,0.55);  
+    backdrop-filter:blur(8px);  
+    padding:6px 10px;  
+    border-radius:12px;  
+    box-shadow:0 3px 10px rgba(0,0,0,0.2);  
+    z-index:50;  
+    font-size:12px;  
+    font-weight:bold;  
+    color:#003a66;  
+}  
+  
+.sun,.moon{  
+    width:26px;  
+    height:26px;  
+    border-radius:50%;  
+}  
+  
+/* ☀️ شمس واقعية */  
+.sun{  
+    background:radial-gradient(circle at 30% 30%, #fff7a0, #ffb300, #ff8800);  
+    box-shadow:0 0 18px #ffcc00;  
+}  
+  
+/* 🌙 قمر واقعي */  
+.moon{  
+    background:radial-gradient(circle at 30% 30%, #ffffff, #d0d7e2, #8a94a6);  
+    box-shadow:0 0 10px rgba(255,255,255,0.8);  
+    position:relative;  
+    display:none;  
+}  
+  
+.moon::after{  
+    content:"";  
+    position:absolute;  
+    width:6px;  
+    height:6px;  
+    background:rgba(0,0,0,0.15);  
+    border-radius:50%;  
+    top:6px;  
+    left:10px;  
+    box-shadow:8px 4px 0 rgba(0,0,0,0.12),  
+               -5px 10px 0 rgba(0,0,0,0.10);  
+}  
+  
+/* ☁️ الغيوم */  
+.cloud{  
+    position:absolute;  
+    top:10%;  
+    width:120px;  
+    height:60px;  
+    background:#fff;  
+    border-radius:50px;  
+    opacity:0.7;  
+    filter:blur(1px);  
+    animation:moveClouds linear infinite;  
+    z-index:0;  
+}  
+  
+.cloud::before,  
+.cloud::after{  
+    content:"";  
+    position:absolute;  
+    background:#fff;  
+    border-radius:50%;  
+}  
+  
+.cloud::before{width:60px;height:60px;top:-20px;left:10px;}  
+.cloud::after{width:70px;height:70px;top:-25px;right:10px;}  
+  
+@keyframes moveClouds{  
+    from{transform:translateX(-200px);}  
+    to{transform:translateX(110vw);}  
+}  
+  
+/* ⭐ نجوم بطيئة */  
+.star{  
+    position:absolute;  
+    top:-50px;  
+    font-size:18px;  
+    animation:fall 12s linear forwards;  
+    z-index:1;  
+    opacity:0.9;  
+}  
+  
+@keyframes fall{  
+    0%{transform:translateY(0);opacity:1;}  
+    100%{transform:translateY(110vh);opacity:0;}  
+}  
+  
+/* 💙 قلوب بطيئة */  
+.heart{  
+    position:absolute;  
+    font-size:18px;  
+    animation:floatUp 12s linear forwards;  
+    z-index:1;  
+    opacity:0.9;  
+    filter:drop-shadow(0 0 8px #4fc3ff);  
+}  
+  
+@keyframes floatUp{  
+    0%{transform:translateY(0);opacity:1;}  
+    100%{transform:translateY(-120vh);opacity:0;}  
+}  
+  
+/* 🎆 ألعاب نارية */  
+.firework{  
+    position:absolute;  
+    width:10px;  
+    height:10px;  
+    border-radius:50%;  
+    animation:boom 1.2s ease-out forwards;  
+    z-index:999;  
+}  
+  
+@keyframes boom{  
+    0%{transform:scale(1);opacity:1;}  
+    100%{transform:scale(30);opacity:0;}  
+}  
+  
+/* البطاقة */  
+.card{  
+    z-index:10;  
+    background:rgba(255,255,255,.35);  
+    backdrop-filter:blur(18px);  
+    padding:40px;  
+    border-radius:30px;  
+    text-align:center;  
+    box-shadow:0 15px 40px rgba(0,0,0,.15);  
+    border:2px solid rgba(255,255,255,.5);  
+    width:90%;  
+    max-width:420px;  
+}  
+  
+h1{  
+    color:#0099ff;  
+    font-size:32px;  
+    margin-bottom:10px;  
+}  
+  
+.subtitle{  
+    color:#0066cc;  
+    margin-bottom:20px;  
+    font-weight:bold;  
+}  
+  
+#timer{  
+    font-size:26px;  
+    font-weight:bold;  
+    color:#0066cc;  
+}  
+  
+.box{  
+    background:rgba(255,255,255,.5);  
+    margin:8px 0;  
+    padding:10px;  
+    border-radius:15px;  
+}  
+  
+.end{  
+    font-size:26px;  
+    color:#00aaff;  
+    font-weight:bold;  
+}  
+</style>  </head>  <body>  <div class="skyBox">  
+    <div id="sun" class="sun"></div>  
+    <div id="moon" class="moon"></div>  
+    <div id="skyText">حاليًا صباحًا ☀️</div>  
+</div>  <!-- غيوم -->  <div class="cloud" style="top:10%; animation-duration:35s;"></div>  
+<div class="cloud" style="top:25%; animation-duration:45s;"></div>  
+<div class="cloud" style="top:40%; animation-duration:40s;"></div>  <div class="card">  
+    <h1>💙 بقيان لتنورنا خالتي 💙</h1>  
+    <div class="subtitle">✨ قربت ✨</div>  
+    <div id="timer"></div>  
+</div>  <script>  
+  
+const targetDate = new Date("2026-07-02T16:00:00");  
+  
+let fireInterval;  
+  
+/* 🌞🌙 */  
+function updateSky(){  
+    const hour = new Date().getHours();  
+    const sun = document.getElementById("sun");  
+    const moon = document.getElementById("moon");  
+    const text = document.getElementById("skyText");  
+  
+    if(hour >= 6 && hour < 18){  
+        sun.style.display="block";  
+        moon.style.display="none";  
+        text.innerHTML="حاليًا صباحًا ☀️";  
+    } else {  
+        sun.style.display="none";  
+        moon.style.display="block";  
+        text.innerHTML="حاليًا مساءً 🌙";  
+    }  
+}  
+  
+updateSky();  
+setInterval(updateSky,60000);  
+  
+/* ⏳ العداد */  
+function updateTimer(){  
+  
+    const now=new Date();  
+    const diff=targetDate-now;  
+  
+    if(diff<=0){  
+        document.getElementById("timer").innerHTML=  
+        `<div class="end">🎉 الحمد لله على السلامة 💙</div>`;  
+        startFireworks();  
+        return;  
+    }  
+  
+    const d=Math.floor(diff/(1000*60*60*24));  
+    const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60));  
+    const m=Math.floor((diff%(1000*60*60))/(1000*60));  
+    const s=Math.floor((diff%(1000*60))/1000);  
+  
+    document.getElementById("timer").innerHTML=`  
+        <div class="box">📅 ${d} يوم</div>  
+        <div class="box">⏰ ${h} ساعة</div>  
+        <div class="box">🕒 ${m} دقيقة</div>  
+        <div class="box">⏳ ${s} ثانية</div>  
+    `;  
+}  
+  
+updateTimer();  
+setInterval(updateTimer,1000);  
+  
+/* ⭐ نجوم */  
+function createStar(){  
+    const star=document.createElement("div");  
+    star.className="star";  
+    star.innerHTML=["⭐","✨"][Math.floor(Math.random()*2)];  
+    star.style.left=Math.random()*100+"vw";  
+    document.body.appendChild(star);  
+    setTimeout(()=>star.remove(),12000);  
+}  
+setInterval(createStar,250);  
+  
+/* 💙 قلوب */  
+function createHeart(){  
+    const heart=document.createElement("div");  
+    heart.className="heart";  
+    heart.innerHTML="💙";  
+    heart.style.left=Math.random()*100+"vw";  
+    document.body.appendChild(heart);  
+    setTimeout(()=>heart.remove(),12000);  
+}  
+setInterval(createHeart,300);  
+  
+/* 🎆 ألعاب نارية دائمة */  
+function createFirework(){  
+    const fw=document.createElement("div");  
+    fw.className="firework";  
+    fw.style.left=Math.random()*100+"vw";  
+    fw.style.top=Math.random()*80+"vh";  
+    fw.style.background=["#ff3b3b","#00c3ff","#7cff3a","#ffd000","#ff4dff"]  
+    [Math.floor(Math.random()*5)];  
+    document.body.appendChild(fw);  
+    setTimeout(()=>fw.remove(),1200);  
+}  
+  
+function startFireworks(){  
+    if(!fireInterval){  
+        fireInterval=setInterval(createFirework,120);  
+    }  
+}  
+  
+</script>  </body>  
 </html>
